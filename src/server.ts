@@ -3,6 +3,8 @@ import cors from 'cors';
 import express from 'express';
 import https from 'https';
 import http from 'http';
+import siteRoutes from './routes/site';
+import {requestIntercept} from "./utils/requestIntercept";
 
 const app = express();
 
@@ -10,9 +12,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//Intercepta todas as requisições e adiciona um log para facilitar o debug
+app.all('*', requestIntercept);
+
+//app.use('/admin', siteRoutes);
+app.use('/', siteRoutes);
+
 const runServer = (port: number, server: http.Server) => {
     server.listen(port, () => {
-        console.log(`Server listening on port ${port}`);
+        console.log(`Server listening on port ${port} started at ${new Date().toLocaleString()}`);
     });
 };
 
