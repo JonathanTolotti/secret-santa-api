@@ -1,5 +1,6 @@
 import {Router} from "express";
 import * as auth from "../controllers/auth";
+import * as events from "../controllers/events";
 
 const router = Router();
 
@@ -8,5 +9,7 @@ router.get('/health', auth.validate, (req, res) => {
 });
 
 router.post('/auth', auth.login);
+
+router.get('/events', auth.validate, events.getAll);
 
 export default router;
