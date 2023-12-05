@@ -11,5 +11,6 @@ router.get('/health', auth.validate, (req, res) => {
 router.post('/auth', auth.login);
 
 router.get('/events', auth.validate, events.getAll);
+router.get('/events/:uuid', auth.validate, events.getEvent);
 
 export default router;

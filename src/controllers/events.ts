@@ -14,3 +14,21 @@ export const getAll: RequestHandler = async (req, res) => {
         error: 'Ocorreu um erro, tente novamente.'
     }).status(500);
 };
+
+export const getEvent: RequestHandler = async (req, res) => {
+    const { uuid } = req.params;
+
+    const item = await eventsService.getOne(uuid);
+
+    if (item) {
+        return res.json({
+            event: item
+        }).status(200);
+    }
+
+    res.json({
+        event: []
+    }).status(204);
+
+
+};
