@@ -4,6 +4,7 @@ import express from 'express';
 import https from 'https';
 import http from 'http';
 import siteRoutes from './routes/site';
+import adminRoutes from './routes/admin';
 import {requestIntercept} from "./utils/requestIntercept";
 
 const app = express();
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 //Intercepta todas as requisições e adiciona um log para facilitar o debug
 app.all('*', requestIntercept);
 
-//app.use('/admin', siteRoutes);
+app.use('/admin', adminRoutes);
 app.use('/', siteRoutes);
 
 const runServer = (port: number, server: http.Server) => {
