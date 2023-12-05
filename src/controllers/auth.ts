@@ -27,3 +27,21 @@ export const login: RequestHandler = (req, res) => {
         token: authService.createToken()
     }).status(200);
 };
+
+export const validate: RequestHandler = (req, res, next) => {
+    if (! req.headers.authorization) {
+        return res.json({
+            error: 'Token de autenticação não enviado'
+        }).status(403);
+    }
+
+    const token = req.headers.authorization.split(' ')[1];
+
+    if (! authService.validateToken(token)) {
+        return res.json({
+            error: 'Acesso negado'
+        }).status(403);
+    }
+
+    next();
+};
