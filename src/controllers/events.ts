@@ -1,5 +1,7 @@
 import {RequestHandler} from "express";
+import {z} from "zod";
 import * as eventsService from "../services/events";
+import * as uuid from "uuid";
 
 export const getAll: RequestHandler = async (req, res) => {
     const items = await eventsService.getAll();
@@ -30,5 +32,36 @@ export const getEvent: RequestHandler = async (req, res) => {
         event: []
     }).status(204);
 
+
+};
+
+export const addEvent: RequestHandler = async (req, res) => {
+    const addEventSchema = z.object({
+        title: z.string(),
+        description: z.string(),
+        grouped: z.boolean()
+    })
+
+    const body = addEventSchema.safeParse(req.body);
+
+    if (! body.success) {
+        return res.json({
+            error: 'Dados inválidos'
+        }).status(400);
+    }
+
+    req.body.uuid = uuid.v4();
+
+    const newEvent = await eventsService.add(body.data);
+
+    if (newEvent) {
+        return res.json({
+            event: newEvent
+        }).status(201);
+    }
+
+    return res.json({
+        error: 'Ocorreu um erro'
+    }).status(500);
 
 };
